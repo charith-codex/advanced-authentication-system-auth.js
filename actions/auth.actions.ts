@@ -2,9 +2,14 @@
 
 import { z } from "zod";
 import { AuthError } from "next-auth";
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import bcrypt from "bcryptjs";
-import { LoginSchema, NewPasswordResetSchema, PasswordResetSchema, RegisterSchema } from "@/schemas";
+import {
+  LoginSchema,
+  NewPasswordResetSchema,
+  PasswordResetSchema,
+  RegisterSchema,
+} from "@/schemas";
 import { prisma } from "@/lib/prisma";
 import { getUserByEmail } from "@/data/user";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
@@ -161,7 +166,6 @@ export const newPasswordReset = async (
   values: z.infer<typeof NewPasswordResetSchema>,
   token?: string | null
 ) => {
-
   if (!token) {
     return { error: "Missing token!" };
   }
@@ -180,7 +184,7 @@ export const newPasswordReset = async (
   }
 
   const hasExpired = new Date(existingToken.expires) < new Date();
-  
+
   if (hasExpired) {
     return { error: "Token has expired!" };
   }
@@ -205,4 +209,9 @@ export const newPasswordReset = async (
   });
 
   return { success: "Password reset successfully!" };
+};
+
+// logout action
+export const logout = async () => {
+  await signOut();
 };
