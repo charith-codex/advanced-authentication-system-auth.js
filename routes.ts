@@ -4,7 +4,10 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/", "/auth/email-verification"];
+export const publicRoutes = [
+  "/",
+  "/auth/email-verification", // access both login and logout users
+];
 
 /**
  * An array of routes that are used for authentication.
@@ -12,7 +15,12 @@ export const publicRoutes = ["/", "/auth/email-verification"];
  * @type {string[]}
  */
 
-export const authRoutes = ["/auth/login", "/auth/register"];
+export const authRoutes = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/reset",
+  "/auth/reset-password",
+];
 
 /**
  * The prefix for API authentication routes.

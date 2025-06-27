@@ -4,13 +4,17 @@ import { z } from "zod";
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import bcrypt from "bcryptjs";
-import { LoginSchema, RegisterSchema } from "@/schemas";
+import { LoginSchema, NewPasswordResetSchema, PasswordResetSchema, RegisterSchema } from "@/schemas";
 import { prisma } from "@/lib/prisma";
 import { getUserByEmail } from "@/data/user";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
-import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import {
+  generatePasswordResetToken,
+  generateVerificationToken,
+} from "@/lib/tokens";
+import { sendPasswordRestEmail, sendVerificationEmail } from "@/lib/mail";
 import { getVerificationTokenByToken } from "@/data/verification-token";
+import { getPasswordResetTokenByToken } from "@/data/password-reset-token";
 
 // register action
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
@@ -124,4 +128,81 @@ export const emailVerification = async (token: string) => {
   });
 
   return { success: "Email verified successfully!" };
+};
+
+// password reset action
+export const passwordReset = async (
+  values: z.infer<typeof PasswordResetSchema>
+) => {
+  const validatedFields = PasswordResetSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid email!" };
+  }
+
+  const { email } = validatedFields.data;
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser) {
+    return { error: "Email does not exist!" };
+  }
+
+  const passwordResetToken = await generatePasswordResetToken(email);
+  await sendPasswordRestEmail(
+    passwordResetToken.email,
+    passwordResetToken.token
+  );
+
+  return { success: "Password reset email sent!" };
+};
+
+// new password enter reset action
+export const newPasswordReset = async (
+  values: z.infer<typeof NewPasswordResetSchema>,
+  token?: string | null
+) => {
+
+  if (!token) {
+    return { error: "Missing token!" };
+  }
+  const validatedFields = NewPasswordResetSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields!" };
+  }
+
+  const { password } = validatedFields.data;
+
+  const existingToken = await getPasswordResetTokenByToken(token);
+
+  if (!existingToken) {
+    return { error: "Invalid token!" };
+  }
+
+  const hasExpired = new Date(existingToken.expires) < new Date();
+  
+  if (hasExpired) {
+    return { error: "Token has expired!" };
+  }
+
+  const existingUser = await getUserByEmail(existingToken.email);
+
+  if (!existingUser) {
+    return { error: "Email does not exist!" };
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  await prisma.user.update({
+    where: { id: existingUser.id },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  await prisma.passwordResetToken.delete({
+    where: { id: existingToken.id },
+  });
+
+  return { success: "Password reset successfully!" };
 };
