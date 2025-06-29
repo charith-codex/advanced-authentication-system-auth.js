@@ -2,8 +2,10 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const domain = process.env.NEXT_PUBLIC_APP_URL;
+
 export const sendPasswordRestEmail = async (email: string, token: string) => {
-  const passwordResetLink = `http://localhost:3000/auth/reset-password?token=${token}`;
+  const passwordResetLink = `${domain}/auth/reset-password?token=${token}`;
 
   await resend.emails.send({
     from: "admin@zenora.tech",
@@ -20,7 +22,7 @@ export const sendPasswordRestEmail = async (email: string, token: string) => {
 };
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const verificationLink = `http://localhost:3000/auth/email-verification?token=${token}`;
+  const verificationLink = `${domain}/auth/email-verification?token=${token}`;
 
   await resend.emails.send({
     from: "admin@zenora.tech",

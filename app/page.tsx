@@ -11,7 +11,7 @@ export default function Home() {
         </p>
 
         <div className="mt-10">
-          <LoginButton>
+          <LoginButton mode="modal" asChild>
             <Button variant="secondary">Sign In</Button>
           </LoginButton>
         </div>
