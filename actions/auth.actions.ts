@@ -215,3 +215,16 @@ export const newPasswordReset = async (
 export const logout = async () => {
   await signOut();
 };
+
+// OAuth accounts actions
+export const getAccountByUserId = async (userId: string) => {
+  try {
+    const account = await prisma.account.findFirst({
+      where: { userId },
+    });
+
+    return account;
+  } catch {
+    return null;
+  }
+};
