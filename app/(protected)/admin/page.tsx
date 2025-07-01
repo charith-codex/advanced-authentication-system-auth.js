@@ -29,7 +29,7 @@ export default function AdminPage() {
   };
 
   return (
-    <Card className="w-[600px]">
+    <Card className="w-[600px] max-w-[90%] mx-4">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">🔑 Admin</p>
       </CardHeader>
@@ -37,11 +37,11 @@ export default function AdminPage() {
         <RoleGate allowedRole={UserRole.ADMIN}>
           <FormSuccess message="You are allowed to see this content" />
         </RoleGate>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-3 shadow-md gap-2">
           <p className="text-sm font-medium">Admin Only Api Route</p>
           <Button onClick={onApiRouteClick}>Click to test</Button>
         </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border p-3 shadow-md gap-2">
           <p className="text-sm font-medium">Admin Only Server Action</p>
           <Button onClick={onServerActionClick}>Click to test</Button>
         </div>
