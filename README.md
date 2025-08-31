@@ -84,6 +84,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 This project was built by following the excellent and in-depth tutorial on YouTube by Antonio Erdeljac.
 * [Watch the Tutorial](https://www.youtube.com/watch?v=1T_35Jz_R-c)
 
-## 📄 License
-
-This project is distributed under the MIT License. See `LICENSE` for more information.
