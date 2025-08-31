@@ -3,7 +3,8 @@
 This project is a comprehensive, full-stack authentication solution built with Next.js 15 and Auth.js (NextAuth v5). It serves as a robust template for implementing secure, feature-rich authentication in modern web applications, based on an incredible tutorial by Antonio Erdeljac.
 
 ## 🚀 Features
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/60667fd4-189a-4e94-aafd-417b4b802153" />
+<img width="1920" height="1080" alt="Screenshot (178)" src="https://github.com/user-attachments/assets/dc78cd3a-8a84-4d02-8c28-6ec10c0a45fe" />
+
 
 This authentication system includes a wide range of features essential for a production-ready application:
 
